@@ -104,7 +104,7 @@ export default function AdminPage() {
             <input
               type="text"
               required
-              placeholder="어드바이저에게 받은 질문을 입력하세요"
+              placeholder="어드바이저에게 보낸 질문을 입력하세요"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               className="w-full border p-3 rounded-xl bg-gray-50 focus:bg-white"
