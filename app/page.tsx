@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, X, Search } from 'lucide-react';
 
 interface FAQ {
   id: number;
@@ -56,20 +55,25 @@ export default function HomePage() {
 
       {/* 검색창 */}
       <div className="w-full relative mb-6">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
         <input
           type="text"
           placeholder="질문이나 답변 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-white text-gray-900 placeholder-gray-400 pl-11 pr-4 py-3 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-black text-sm transition"
+          className="w-full bg-white text-gray-900 placeholder-gray-400 pl-11 pr-10 py-3 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-black text-sm transition border border-gray-100"
         />
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
         {searchQuery && (
           <button 
             onClick={() => setSearchQuery('')}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 font-bold text-xs"
           >
-            <X size={16} />
+            ✕
           </button>
         )}
       </div>
@@ -119,8 +123,8 @@ export default function HomePage() {
                   <span className="font-serif text-lg text-gray-900 pr-4">
                     {faq.question}
                   </span>
-                  <span className="bg-gray-100 p-2 rounded-full text-gray-600 shrink-0">
-                    {isOpen ? <X size={18} /> : <Plus size={18} />}
+                  <span className="bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center text-gray-600 shrink-0 font-bold text-base">
+                    {isOpen ? '✕' : '+'}
                   </span>
                 </button>
 
