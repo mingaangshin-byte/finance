@@ -1,3 +1,3 @@
-# Finance FAQ Project (Updated)
+# Finance FAQ Project (v3 Fixed)
 
-실시간 검색 기능과 요청하신 신규 카테고리가 반영된 업데이트 프로젝트 파일입니다.
+외부 패키지나 이미지 의존성을 완전히 제외하고 Pure CSS/SVG 아이콘 기반으로 검색창 및 UI를 구현한 안정성 개선 버전입니다.
