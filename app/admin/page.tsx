@@ -92,7 +92,7 @@ export default function AdminPage() {
             </label>
             <input
               type="text"
-              placeholder="예: 투자 자문, 자산 관리"
+              placeholder="예: 회계 시스템, 지출 증빙"
               value={newCatName}
               onChange={(e) => setNewCatName(e.target.value)}
               className="w-full border p-3 rounded-xl bg-gray-50 focus:bg-white"

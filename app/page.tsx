@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Search } from 'lucide-react';
 
 interface FAQ {
   id: number;
@@ -16,6 +16,7 @@ export default function HomePage() {
   const [openId, setOpenId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [categories, setCategories] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     fetch('/api/faqs')
@@ -30,9 +31,14 @@ export default function HomePage() {
       .catch((err) => console.error(err));
   }, []);
 
-  const filteredFaqs = selectedCategory === 'All'
-    ? faqs
-    : faqs.filter((f) => f.category_name === selectedCategory);
+  const filteredFaqs = faqs.filter((faq) => {
+    const matchesCategory = selectedCategory === 'All' || faq.category_name === selectedCategory;
+    const query = searchQuery.toLowerCase().trim();
+    const matchesSearch = !query || 
+      faq.question.toLowerCase().includes(query) || 
+      faq.answer.toLowerCase().includes(query);
+    return matchesCategory && matchesSearch;
+  });
 
   const toggleAccordion = (id: number) => {
     setOpenId(openId === id ? null : id);
@@ -48,6 +54,27 @@ export default function HomePage() {
         Questions People<br />Often Ask
       </h1>
 
+      {/* 검색창 */}
+      <div className="w-full relative mb-6">
+        <input
+          type="text"
+          placeholder="질문이나 답변 검색..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full bg-white text-gray-900 placeholder-gray-400 pl-11 pr-4 py-3 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-black text-sm transition"
+        />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+        {searchQuery && (
+          <button 
+            onClick={() => setSearchQuery('')}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            <X size={16} />
+          </button>
+        )}
+      </div>
+
+      {/* 카테고리 필터 */}
       <div className="flex flex-wrap gap-2 justify-center mb-8">
         <button
           onClick={() => setSelectedCategory('All')}
@@ -74,43 +101,50 @@ export default function HomePage() {
         ))}
       </div>
 
+      {/* FAQ 리스트 */}
       <div className="w-full flex flex-col gap-3">
-        {filteredFaqs.map((faq) => {
-          const isOpen = openId === faq.id;
-          return (
-            <div key={faq.id} className="w-full">
-              <button
-                onClick={() => toggleAccordion(faq.id)}
-                className="w-full bg-white rounded-2xl p-5 flex justify-between items-center text-left shadow-sm hover:shadow-md transition duration-200"
-              >
-                <span className="font-serif text-lg text-gray-900 pr-4">
-                  {faq.question}
-                </span>
-                <span className="bg-gray-100 p-2 rounded-full text-gray-600 shrink-0">
-                  {isOpen ? <X size={18} /> : <Plus size={18} />}
-                </span>
-              </button>
+        {filteredFaqs.length === 0 ? (
+          <div className="text-center py-12 text-gray-500 text-sm">
+            검색 결과가 없습니다.
+          </div>
+        ) : (
+          filteredFaqs.map((faq) => {
+            const isOpen = openId === faq.id;
+            return (
+              <div key={faq.id} className="w-full">
+                <button
+                  onClick={() => toggleAccordion(faq.id)}
+                  className="w-full bg-white rounded-2xl p-5 flex justify-between items-center text-left shadow-sm hover:shadow-md transition duration-200"
+                >
+                  <span className="font-serif text-lg text-gray-900 pr-4">
+                    {faq.question}
+                  </span>
+                  <span className="bg-gray-100 p-2 rounded-full text-gray-600 shrink-0">
+                    {isOpen ? <X size={18} /> : <Plus size={18} />}
+                  </span>
+                </button>
 
-              {isOpen && (
-                <div className="mt-2 bg-[#E2E6DF] rounded-2xl p-6 text-gray-800 leading-relaxed text-sm font-sans">
-                  <p className="whitespace-pre-wrap">{faq.answer}</p>
-                  {faq.file_url && (
-                    <div className="mt-4 pt-3 border-t border-gray-300/50">
-                      <a
-                        href={faq.file_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-xs font-semibold text-gray-700 underline hover:text-black"
-                      >
-                        📎 첨부파일/자료 보기
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                {isOpen && (
+                  <div className="mt-2 bg-[#E2E6DF] rounded-2xl p-6 text-gray-800 leading-relaxed text-sm font-sans">
+                    <p className="whitespace-pre-wrap">{faq.answer}</p>
+                    {faq.file_url && (
+                      <div className="mt-4 pt-3 border-t border-gray-300/50">
+                        <a
+                          href={faq.file_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs font-semibold text-gray-700 underline hover:text-black"
+                        >
+                          📎 첨부파일/자료 보기
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
       </div>
     </main>
   );
