@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface FAQ {
   id: number;
@@ -45,6 +46,25 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen py-16 px-4 max-w-xl mx-auto flex flex-col items-center">
+      {/* 상단 챗봇 연결 바너 / 메뉴 버튼 */}
+      <div className="w-full mb-8">
+        <Link
+          href="/chat"
+          className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4 rounded-2xl shadow-md hover:shadow-lg transition flex justify-between items-center group"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🤖</span>
+            <div>
+              <div className="font-bold text-sm">실시간 AI 고객상담 챗봇</div>
+              <div className="text-xs text-gray-300">궁금한 점을 AI에게 바로 물어보세요!</div>
+            </div>
+          </div>
+          <span className="text-xs font-semibold bg-white/20 group-hover:bg-white group-hover:text-black text-white px-3 py-1.5 rounded-full transition">
+            상담 시작하기 →
+          </span>
+        </Link>
+      </div>
+
       <div className="bg-[#E3E5DF] text-gray-700 text-xs tracking-widest font-semibold px-4 py-1.5 rounded-full mb-6 uppercase">
         F.A.Q
       </div>
